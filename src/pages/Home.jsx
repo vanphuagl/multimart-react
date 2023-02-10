@@ -16,9 +16,14 @@ import Clock from "../components/UI/Clock";
 /* -------------------------------- services -------------------------------- */
 import Services from "../services/Services";
 
+/* ---------------------------------- utils --------------------------------- */
+import useGetData from "../utils/useGetData";
+
 import "../styles/Home.css";
 
 const Home = () => {
+  const { data: productsAPI, isLoading } = useGetData("products");
+
   const year = new Date().getFullYear();
 
   const [trendingData, setTrendingData] = useState([]);
@@ -49,7 +54,7 @@ const Home = () => {
     setMobileData(filterdMobileProducts);
     setWirelessData(filterdWirelessProducts);
     setPopularData(filterdPopularProducts);
-  }, []);
+  }, [products]);
 
   return (
     <Helmet title={"Home"}>
@@ -91,7 +96,11 @@ const Home = () => {
               <h2 className="section__title">Trending Products</h2>
             </Col>
 
-            <ProductsList data={trendingData} />
+            {isLoading ? (
+              <h4 className="fw-bold">Loading......</h4>
+            ) : (
+              <ProductsList data={trendingData} />
+            )}
           </Row>
         </Container>
       </section>

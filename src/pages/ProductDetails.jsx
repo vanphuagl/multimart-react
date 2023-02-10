@@ -16,9 +16,33 @@ import ProductsList from "../components/UI/ProductsList";
 import { useDispatch } from "react-redux";
 import { cartActions } from "../redux/slices/cartSlice";
 
+/* -------------------------------- firebase -------------------------------- */
+import { db } from "../firebase.config";
+import { doc, getDoc } from "firebase/firestore";
+
+/* ---------------------------------- utils --------------------------------- */
+import useGetData from "../utils/useGetData";
+
 import "../styles/ProductDetail.css";
 
 const ProductDetails = () => {
+  // const docRef = doc(db, "products", id);
+  // const { data: products } = useGetData("products");
+
+  // useEffect(() => {
+  //   const getProduct = async () => {
+  //     const docSnap = await getDoc(docRef);
+
+  //     if (docSnap.exists()) {
+  //       setProduct(docSnap.data());
+  //     } else {
+  //       console.log("no product!");
+  //     }
+  //   };
+
+  //   getProduct();
+  // });
+
   const dispatch = useDispatch();
 
   const [tab, setTab] = useState("desc");

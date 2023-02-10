@@ -15,6 +15,7 @@ import "../styles/Cart.css";
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
+  console.log("cartItems", cartItems);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
 
   return (
@@ -54,13 +55,16 @@ const Cart = () => {
                 <span className="fs-4 fw-bold">${totalAmount}</span>
               </div>
 
-              <p className="fs-6 mt-2">taxes and shipping will calculate in checkout</p>
+              <p className="fs-6 mt-2">
+                taxes and shipping will calculate in checkout
+              </p>
 
               <div>
-                <button className="buy__btn w-100">
-                  <Link to="/checkout">Checkout</Link>
-                </button>
-
+                {cartItems.length > 0 && (
+                  <button className="buy__btn w-100">
+                    <Link to="/checkout">Checkout</Link>
+                  </button>
+                )}
                 <button className="buy__btn w-100 mt-3">
                   <Link to="/shop">Continue Shopping</Link>
                 </button>

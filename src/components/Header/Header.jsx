@@ -2,12 +2,21 @@ import React, { useEffect, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Container, Row } from "reactstrap";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 
+/* ---------------------------------- redux --------------------------------- */
 import { useSelector } from "react-redux";
+
+/* -------------------------------- firebase -------------------------------- */
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase.config";
 
 /* --------------------------------- assets --------------------------------- */
 import logo from "../../assets/images/eco-logo.png";
 import user_icon from "../../assets/images/user-icon.png";
+
+/* ---------------------------------- utils --------------------------------- */
+import useAuth from "../../utils/useAuth";
 
 import "./Header.css";
 
@@ -30,7 +39,9 @@ const Header = () => {
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
   const headerRef = useRef(null);
   const menuRef = useRef(null);
+  const profileActionRef = useRef(null);
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
 
   const stickyHeader = () => {
     window.addEventListener("scroll", () => {
@@ -52,6 +63,20 @@ const Header = () => {
   }, []);
 
   const menuToggle = () => menuRef.current.classList.toggle("active__menu");
+
+  const profileToggle = () =>
+    profileActionRef.current.classList.toggle("show__profileActions");
+
+  const logout = () => {
+    signOut(auth)
+      .then(() => {
+        toast.success("Logged out");
+        navigate("/home");
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  };
 
   return (
     <header className="header" ref={headerRef}>
@@ -94,13 +119,30 @@ const Header = () => {
                 <span className="badge">{totalQuantity}</span>
               </span>
 
-              <span>
+              <div className="profile">
                 <motion.img
                   whileTap={{ scale: 1.1 }}
-                  src={user_icon}
+                  src={currentUser ? currentUser.photoURL : user_icon}
                   alt="user-icon"
+                  onClick={profileToggle}
                 />
-              </span>
+
+                <div
+                  className="profile__actions"
+                  ref={profileActionRef}
+                  onClick={profileToggle}
+                >
+                  {currentUser ? (
+                    <span onClick={logout}>Logout</span>
+                  ) : (
+                    <div className="d-flex align-items-center justify-content-center flex-column">
+                      <Link to="/signup">Signup</Link>
+                      <Link to="/login">Login</Link>
+                      <Link to="/dashboard">Dashboard</Link>
+                    </div>
+                  )}
+                </div>
+              </div>
 
               <div className="mobile__menu">
                 <span onClick={menuToggle}>
